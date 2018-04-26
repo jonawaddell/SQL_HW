@@ -118,9 +118,38 @@ select title from film
 
 -- 7e. Display the most frequently rented movies in descending order.
 select rental_id,  count(rental_id) as rental_count from payment
-group by payment.rental_id
+group by payment.rental_id;
 
+-- 7f. Write a query to display how much business, in dollars, each store brought in.
+select staff.store_id, sum(payment.amount) from payment
+join staff on payment.staff_id = staff.staff_id
+group by store_id;
 
+-- 7g. Write a query to display for each store its store ID, city, and country.
+select store.store_id, city.city, country.country from store
+join address on (store.address_id = address.address_id)
+join city on (address.city_id = city.city_id)
+join country on (city.country_id = country.country_id)
+
+-- 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+-- 
+
+create view TopFive
+select c.name as "Top Five", sum(p.amount) as "Gross" 
+from category c
+join film_category fc on (c.category_id=fc.category_id)
+join inventory i on (fc.film_id=i.film_id)
+join rental r on (i.inventory_id=r.inventory_id)
+join payment p on (r.rental_id=p.rental_id)
+group by c.name order by Gross  limit 5;
+
+-- 8b. How would you display the view that you created in 8a?
+select* from TopFive
+-- 
+-- 8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
+-- 
+DROP VIEW TopFive
+-- Appendix: List of Tables in the Sakila DB
 
 
 
